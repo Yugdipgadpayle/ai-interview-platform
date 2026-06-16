@@ -34,6 +34,13 @@ class Settings(BaseSettings):
 
     @computed_field  # type: ignore[prop-decorator]
     @property
+    def async_database_url(self) -> str:
+        if self.database_url.startswith("postgresql://"):
+            return self.database_url.replace("postgresql://", "postgresql+asyncpg://", 1)
+        return self.database_url
+
+    @computed_field  # type: ignore[prop-decorator]
+    @property
     def alembic_database_url(self) -> str:
         if self.sync_database_url:
             return self.sync_database_url
